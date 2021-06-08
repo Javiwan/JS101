@@ -6,28 +6,55 @@
 
 const readline = require('readline-sync');
 
-console.log('Welcome to Calculator!');
-
-console.log("What's is the first number?");
-let number1 = readline.question();
-
-console.log("What's is the second number?");
-let number2 = readline.question();
-
-console.log(`${number1} ${number2}`);
-
-console.log('What operation would you like to perform?\n1) Add 2) Substract 3) Multiply 4) Divide');
-let operation = readline.question();
-
-let output;
-if (operation === '1'){
-  output = Number(number1) + Number(number2);
-}else if (operation === '2'){
-  output = Number(number1) - Number(number2);
-}else if (operation === '3'){
-  output = Number(number1) * Number(number2);
-}else if (operation === '4'){
-  output = Number(number1) / Number(number2);
+function promp(message) {
+  console.log(`=> ${message}`);
 }
 
-console.log(`The result is ${output}`);
+function invalidNumber(num) {
+  return num.trimStart() === '' || Number.isNaN(Number(num));
+}
+
+promp('Welcome to Calculator!');
+
+promp("What's is the first number?");
+let number1 = readline.question();
+
+while (invalidNumber(number1)) {
+  promp("Hmm... that doesn't look like a valid number.");
+  number1 = readline.question();
+}
+
+promp("What's is the second number?");
+let number2 = readline.question();
+
+while (invalidNumber(number2)) {
+  promp("Hmm... that doesn't look like a valid number.");
+  number2 = readline.question();
+}
+
+promp('What operation would you like to perform?\n1) Add 2) Substract 3) Multiply 4) Divide');
+let operation = readline.question();
+
+while (!['1', '2', '3', '4'].includes(operation)) {
+  promp('Must choose 1, 2, 3 or 4');
+  operation = readline.question();
+}
+
+let output;
+
+switch (operation) {
+  case '1':
+    output = Number(number1) + Number(number2);
+    break;
+  case '2':
+    output = Number(number1) - Number(number2);
+    break;
+  case '3':
+    output = Number(number1) * Number(number2);
+    break;
+  case '4':
+    output = Number(number1) / Number(number2);
+    break;
+}
+
+promp(`The result is ${output}`);
