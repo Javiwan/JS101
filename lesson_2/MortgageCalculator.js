@@ -43,17 +43,17 @@ Algorithm
 
 const readline = require('readline-sync');
 
-function prompt (string) {
+function Prompt (string) {
   console.log(`---> ${string}`);
 }
 
-function invalidInput(num) {
+function InvalidInput(num) {
   return Number.isNaN(num) === true ||
     num < 0 ||
     num === '';
 }
 
-function invalidLoanDuration(input) {
+function InvalidLoanDuration(input) {
   if (input.includes('/')) {
     let arr = input.split('/');
     return ((isNaN(arr[0]) || isNaN(arr[1])) ||
@@ -63,7 +63,7 @@ function invalidLoanDuration(input) {
   return true;
 }
 
-function invalidAnswer(string) {
+function InvalidAnswer(string) {
   return (string[0] !== 'n' && string[0] !== 'y');
 }
 
@@ -84,33 +84,33 @@ function LoanDurationInMonths(loanDuration) {
 }
 
 function AskForLoanAmount() {
-  prompt('Please introduce the loan amount:');
+  Prompt('Please introduce the loan amount:');
   let loanAmount = parseFloat(readline.question());
 
-  while (invalidInput(loanAmount)) {
-    prompt('Please introduce a valid loan amount. The loan amount must be a number greater than zero');
+  while (InvalidInput(loanAmount)) {
+    Prompt('Please introduce a valid loan amount. The loan amount must be a number greater than zero');
     loanAmount = parseFloat(readline.question());
   }
   return loanAmount;
 }
 
 function AskForAnualPercentageRate() {
-  prompt('Please introduce the Anual Percentage Rate: Example for "5.5%" introduce "5.5"');
+  Prompt('Please introduce the Anual Percentage Rate: Example for "5.5%" introduce "5.5"');
   let anualPercentageRate = parseFloat(readline.question());
 
-  while (invalidInput(anualPercentageRate)) {
-    prompt('Please introduce a valid Anual Percentage Rate. Example: For "5.5%" introduce "5.5"');
+  while (InvalidInput(anualPercentageRate)) {
+    Prompt('Please introduce a valid Anual Percentage Rate. Example: For "5.5%" introduce "5.5"');
     anualPercentageRate = parseFloat(readline.question());
   }
   return anualPercentageRate;
 }
 
 function AskForLoanDuration() {
-  prompt('Please introduce the loan duration in years/months. Example for 2 years and 11 months introduce "2/11"');
+  Prompt('Please introduce the loan duration in years/months. Example for 2 years and 11 months introduce "2/11"');
   let loanDuration = readline.question();
 
-  while (invalidLoanDuration(loanDuration)) {
-    prompt('Please introduce a valid loan duration in years/months. Example for 2 years and 11 months introduce "2/11"');
+  while (InvalidLoanDuration(loanDuration)) {
+    Prompt('Please introduce a valid loan duration in years/months. Example for 2 years and 11 months introduce "2/11"');
     loanDuration = readline.question();
   }
 
@@ -143,17 +143,17 @@ function LoanCalc(loanDuration, anualPercentageRate, loanAmount) {
 }
 
 function PrintResults(monthlyPaiment, loanAmount, totalInterest) {
-  prompt(`You will have to pay $${monthlyPaiment.toFixed(2)} every month.`);
-  prompt(`The total amount paid will be $${loanAmount.toFixed(2)}.`);
-  prompt(`The total interest amount will be $${totalInterest.toFixed(2)}.`);
+  Prompt(`You will have to pay $${monthlyPaiment.toFixed(2)} every month.`);
+  Prompt(`The total amount paid will be $${loanAmount.toFixed(2)}.`);
+  Prompt(`The total interest amount will be $${totalInterest.toFixed(2)}.`);
 }
 
 function AskForNewCalculation() {
-  prompt('Would you like to perform another loan calculation? (y/n)');
+  Prompt('Would you like to perform another loan calculation? (y/n)');
   let answer = readline.question().toLowerCase();
 
-  while (invalidAnswer(answer)) {
-    prompt('Please answer "y" for yes or "n" for no');
+  while (InvalidAnswer(answer)) {
+    Prompt('Please answer "y" for yes or "n" for no');
     answer = readline.question().toLowerCase();
   }
   return answer;
