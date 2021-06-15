@@ -76,6 +76,13 @@ function MonthlyPaiment(loan, monthlyInterest, loanDuration) {
     (1 - Math.pow((1 + monthlyInterest), (-loanDuration))));
 }
 
+function LoanDurationInMonths(loanDuration) {
+  let loanDurationArray = loanDuration.split('/');
+
+  return (parseInt(loanDurationArray[0], 10) * 12) +
+    parseInt(loanDurationArray[1], 10);
+}
+
 function AskForLoanAmount() {
   prompt('Please introduce the loan amount:');
   let loanAmount = parseFloat(readline.question());
@@ -110,6 +117,37 @@ function AskForLoanDuration() {
   return loanDuration;
 }
 
+function NoPercentageRateLoanCalc(loanDuration, loanAmount) {
+  let totalInterest = 0;
+
+  let loanDurationMonths = LoanDurationInMonths(loanDuration);
+
+  let monthlyPaiment = loanAmount / loanDurationMonths;
+
+  PrintResults(monthlyPaiment, loanAmount, totalInterest);
+}
+
+function LoanCalc(loanDuration, anualPercentageRate, loanAmount) {
+  let loanDurationMonths = LoanDurationInMonths(loanDuration);
+
+  let monthlyPercentageRate = CalcMonthlyInterestRate(anualPercentageRate);
+
+  let monthlyPaiment = MonthlyPaiment (
+    loanAmount, monthlyPercentageRate, loanDurationMonths);
+
+  let totalPaid = monthlyPaiment * loanDurationMonths;
+
+  let totalInterest = totalPaid - loanAmount;
+
+  PrintResults(monthlyPaiment, totalPaid, totalInterest);
+}
+
+function PrintResults(monthlyPaiment, loanAmount, totalInterest) {
+  prompt(`You will have to pay $${monthlyPaiment.toFixed(2)} every month.`);
+  prompt(`The total amount paid will be $${loanAmount.toFixed(2)}.`);
+  prompt(`The total interest amount will be $${totalInterest.toFixed(2)}.`);
+}
+
 function AskForNewCalculation() {
   prompt('Would you like to perform another loan calculation? (y/n)');
   let answer = readline.question().toLowerCase();
@@ -135,34 +173,10 @@ while (true) {
 
 
   if (anualPercentageRate === 0) {
-    let loanDurationArray = loanDuration.split('/');
-
-    let loanDurationMonths = (Number(loanDurationArray[0]) * 12) +
-      Number(loanDurationArray[1]);
-
-    let monthlyPaiment = loanAmount / loanDurationMonths;
-    prompt(`You will have to pay $${monthlyPaiment.toFixed(2)} every month.`);
-    prompt(`The total amount paid will be $${loanAmount.toFixed(2)}.`);
-    prompt(`The total interest amount will be $0.`);
+    NoPercentageRateLoanCalc(loanDuration, loanAmount);
 
   } else {
-    let loanDurationArray = loanDuration.split('/');
-
-    let loanDurationMonths = (Number(loanDurationArray[0]) * 12) +
-      Number(loanDurationArray[1]);
-
-    let monthlyPercentageRate = CalcMonthlyInterestRate(anualPercentageRate);
-
-    let monthlyPaiment = MonthlyPaiment (
-      loanAmount, monthlyPercentageRate, loanDurationMonths);
-
-    let totalPaid = monthlyPaiment * loanDurationMonths;
-
-    let totalInterest = totalPaid - loanAmount;
-
-    prompt(`You will have to pay $${monthlyPaiment.toFixed(2)} every month.`);
-    prompt(`The total amount paid will be $${totalPaid.toFixed(2)}.`);
-    prompt(`The total interest amount will be $${totalInterest.toFixed(2)}.\n`);
+    LoanCalc(loanDuration, anualPercentageRate, loanAmount);
   }
 
   let answer = AskForNewCalculation();
