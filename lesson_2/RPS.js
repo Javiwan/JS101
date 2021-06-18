@@ -21,10 +21,6 @@ let round = 1;
 let playerPoints = 0;
 let computerPoints = 0;
 
-function prompt(message) {
-  console.log(`=> ${message}`);
-}
-
 function askForChoice() {
   console.log("            Choose your weapon typing one of the letters in brackets:\n");
   console.log("                [r]ock, [p]aper, [sc]issors, [l]izard, [sp]pock.");
@@ -109,7 +105,6 @@ function resetVariables() {
 }
 
 function askForPlayingNextRound() {
-  console.log(round);
   if (round > 0) {
     console.log('                 Are you brave enought to go to next round? (y/n)');
   } else {
@@ -142,8 +137,7 @@ while (true) {
 
   displayPoints();
 
-  if (round === 5 || (playerPoints === 3 && computerPoints < 3) ||
-      (playerPoints < 3 && computerPoints === 3)) {
+  if (round === 5 ) {
     displayGameWinner();
     resetVariables();
   }
