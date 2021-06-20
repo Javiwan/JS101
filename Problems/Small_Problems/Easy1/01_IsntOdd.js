@@ -18,12 +18,12 @@ Algorithm
   -If equals 0 return false
 */
 
-function isOdd(num){
+function isOdd(num) {
   num = Math.abs(num);
-  
-  if (num % 2 === 1){
+
+  if (num % 2 === 1) {
     return true;
-  }else{
+  } else {
     return false;
   }
 }
@@ -35,8 +35,13 @@ console.log(isOdd(-8)); // => false
 console.log(isOdd(0)); // => false
 console.log(isOdd(7)); // => true
 
+
 /* Much better solution
 function isOdd(num){
   return Math.abs(num) % 2 === 1;
 }
+*/
+
+/* Other solution
+let isOdd = num => num % 2 === 1;
 */
