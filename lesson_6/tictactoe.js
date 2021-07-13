@@ -148,8 +148,6 @@ function alternatePlayer(currentPlayer) {
   return (currentPlayer === 'player') ? 'computer' : 'player';
 }
 
-
-
 function joinOr(arr, separator = ', ', str = 'or') {
   let result = '';
 
