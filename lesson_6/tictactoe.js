@@ -1,5 +1,7 @@
 const readline = require('readline-sync');
 
+let whoGoesFirst = 'player'; //Choose between 'player', 'computer', 'choose'
+
 const INITIAL_MARKER = ' ';
 const HUMAN_MARKER = 'X';
 const COMPUTER_MARKER = 'O';
@@ -12,10 +14,24 @@ const WIN_COMBINATIONS = [
   [ 1, 5, 9], [ 7, 5, 3]
 ];
 
+function computerDefense(board, marker) {
+  for ( let count = 0; count < WIN_COMBINATIONS.length; count += 1) {
+    let dangerousArr = WIN_COMBINATIONS[count]
+      .filter(num => board[num - 1] === marker);
 
-function displayBoard(board) {
-  console.clear();
+    if (dangerousArr.length === 2) {
+      let option = WIN_COMBINATIONS[count]
+        .find(num => board[num - 1] === INITIAL_MARKER);
 
+      if (option !== undefined) return option;
+    }
+  }
+  return null;
+}
+
+function displayBoard(board, currentGame) {
+
+  console.log(`\n          GAME ${currentGame} of ${GAMES_TO_WIN}\n`)
   console.log(`    You are ${HUMAN_MARKER}. Computer is ${COMPUTER_MARKER}\n`);
 
   console.log('    -------------------------');
@@ -83,9 +99,18 @@ function playerChooseSquare(board) {
 }
 
 function computerChooseSquare(board) {
-  console.log(emptySquares(board).length);
-  let choose = Math.floor(Math.random() * (emptySquares(board).length));
-  board[Number(emptySquares(board)[choose])] = COMPUTER_MARKER;
+
+  if (computerDefense(board, COMPUTER_MARKER) !== null) {
+    board[computerDefense(board, COMPUTER_MARKER) - 1] = COMPUTER_MARKER;
+  } else if (computerDefense(board, HUMAN_MARKER) !== null) {
+    board[computerDefense(board, HUMAN_MARKER) - 1] = COMPUTER_MARKER;
+  } else if (board[4] === INITIAL_MARKER) {
+    board[4] = COMPUTER_MARKER;
+  } else {
+    let choose = Math.floor(Math.random() * (emptySquares(board).length));
+    board[Number(emptySquares(board)[choose])] = COMPUTER_MARKER;
+  }
+
 }
 
 function isBoardFull(board) {
@@ -121,46 +146,130 @@ function updateScore(board, score) {
   }
   console.log(`\n Your score: ${score[0]}. Computer score: ${score[1]}`);
 }
-while (true) {
 
-  let score = [0,0];
+function matchWinner(score) {
+  if (score[0] > score[1]) {
+    console.log('   PLAYER WINS THE MATCH!');
+  } else if (score[0] < score[1]) {
+    console.log('   COMPUTER WINS THE MATCH');
+  } else {
+    console.log("IT'S A TIE!");
+  }
+}
 
+function playerFirstSequence(board, currentGame, score) {
+  while (true) {
+    console.clear();
+    displayBoard(board, currentGame);
+    updateScore(board, score);
+
+    playerChooseSquare(board);
+    if (isBoardFull(board) || isAWinner(board)) break;
+
+    computerChooseSquare(board);
+    if (isBoardFull(board) || isAWinner(board)) break;
+
+  }
+}
+
+function computerFirstSequence(board, currentGame, score) {
   while (true) {
     console.clear();
 
+    computerChooseSquare(board);
+    if (isBoardFull(board) || isAWinner(board)) break;
+
+    displayBoard(board, currentGame);
+    updateScore(board, score);
+
+    playerChooseSquare(board);
+    if (isBoardFull(board) || isAWinner(board)) break;
+
+  }
+}
+
+function whoPlaysFirst() {
+  console.log('Who goes first? Computer or Player? Choose "C" for computer or "P" for player');
+  let answer = readline.question().toLowerCase();
+  while (true) {
+    if (answer === 'c') {
+      whoGoesFirst = 'computer';
+      break;
+    } else if (answer === 'p') {
+      whoGoesFirst = 'player';
+      break;
+    } else {
+      console.log('Please choose "C" for computer or "P" for player');
+      whoGoesFirst = readline.question().toLowerCase();
+    }
+  }
+}
+
+while (true) {
+
+  let score = [0,0];
+  let currentGame = 0;
+  console.clear();
+  whoPlaysFirst();
+
+  while (true) {
+    console.clear();
+    currentGame += 1;
     let board = newBoard();
 
+    switch (whoGoesFirst) {
 
-    while (true) {
-      displayBoard(board, score);
-      updateScore(board, score);
+      case 'player':
+        playerFirstSequence(board, currentGame, score);
+        break;
 
-      playerChooseSquare(board);
-      if (isBoardFull(board) || isAWinner(board)) break;
-
-      computerChooseSquare(board);
-      if (isBoardFull(board) || isAWinner(board)) break;
-
+      case 'computer':
+        computerFirstSequence(board, currentGame, score);
+        break;
     }
 
     console.clear();
-    displayBoard(board, score);
+    displayBoard(board, currentGame);
     updateScore(board, score);
 
     if (isAWinner(board)) {
       console.log('\n');
-      console.log(`${isAWinner(board)} wins!`);
+      console.log(`      ${isAWinner(board)} wins!`);
       console.log('\n\n');
     } else {
       console.log('\n');
-      console.log(`Its a tie!`);
+      console.log(`              Its a tie!`);
       console.log('\n\n');
     }
-    console.log('Do you want to play again? (y or n)');
+
+    if (currentGame >= GAMES_TO_WIN) {
+      matchWinner(score);
+      break;
+    }
+
+    console.log('Do you want to play next round? (y or n)');
     let answer = readline.question().toLowerCase();
-    if (answer !== 'y') break;
+    while (true) {
+      if (answer === 'n' || answer === 'y') {
+        break;
+      } else {
+        console.log("I didn't understand. Do you want to play next round? (y or n)");
+        answer = readline.question().toLowerCase();
+      }
+    }
+    if (answer === 'n') break;
   }
 
-  console.log('Thank you for playing!');
-
+  console.log('\nDo you want to play a new match? (y or n)');
+  let answer = readline.question().toLowerCase();
+  while (true) {
+    if (answer === 'n' || answer === 'y') {
+      break;
+    } else {
+      console.log("I didn't understand. Do you want to play next round? (y or n)");
+      answer = readline.question().toLowerCase();
+    }
+  }
+  if (answer === 'n') break;
 }
+console.log('Thank you for playing!');
