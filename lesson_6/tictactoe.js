@@ -14,8 +14,24 @@ const WIN_COMBINATIONS = [
 
 const WHO_GOES_FIRST = 'choose'; //Choose between 'player', 'computer', 'choose'
 
+function welcomeMessage() {
+  console.clear();
+  let welcome = `
+  -------------------------------------
+  |  WELCOME TO THE TIC TAC TOE GAME  |
+  -------------------------------------`;
+  console.log(welcome);
+  console.log('\n   Press enter to start...');
+  readline.question();
+}
+
 function whoPlaysFirst() {
-  console.log('Who goes first? Computer or Player? Choose "C" for computer or "P" for player');
+  let question = `
+  ---------------------------------------------
+  |    Who plays first? Computer or Player?   |
+  | Choose "C" for computer or "P" for player |
+  ---------------------------------------------`;
+  console.log(question);
   let answer = readline.question().toLowerCase();
   while (true) {
     if (answer === 'c') {
@@ -25,7 +41,7 @@ function whoPlaysFirst() {
       return 'player';
       //break;
     } else {
-      console.log('Please choose "C" for computer or "P" for player');
+      console.log(' Please choose "C" for computer or "P" for player');
       answer = readline.question().toLowerCase();
     }
   }
@@ -59,22 +75,6 @@ function displayBoard(board, currentGame) {
       -------------------------`;
   console.log(boardLayout);
 
-  /*console.log(`\n          GAME ${currentGame} of ${GAMES_TO_WIN}\n`)
-  console.log(`    You are ${HUMAN_MARKER}. Computer is ${COMPUTER_MARKER}\n`);
-
-  console.log('    -------------------------');
-  console.log('    |       |       |       |');
-  console.log(`    |   ${board[0]}   |   ${board[1]}   |   ${board[2]}   |`);
-  console.log('    |       |       |       |');
-  console.log('    |-------+-------+-------|');
-  console.log('    |       |       |       |');
-  console.log(`    |   ${board[3]}   |   ${board[4]}   |   ${board[5]}   |`);
-  console.log('    |       |       |       |');
-  console.log('    |-------+-------+-------|');
-  console.log('    |       |       |       |');
-  console.log(`    |   ${board[6]}   |   ${board[7]}   |   ${board[8]}   |`);
-  console.log('    |       |       |       |');
-  console.log('    -------------------------'); */
 }
 
 function updateScore(board, score) {
@@ -246,6 +246,8 @@ function askToPlayNextMatch() {
   }
   return answer;
 }
+
+welcomeMessage();
 
 while (true) {
 
