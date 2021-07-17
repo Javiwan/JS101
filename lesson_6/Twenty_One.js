@@ -180,13 +180,16 @@ function checkForWinner(dealerRoundPoints, playerRoundPoints) {
   }
 }
 
-let deck = createDeck();
-let playersPoints;
-let dealersPoints;
+
 
 welcomeMsg();
 
 while (true) {
+
+  let deck = createDeck();
+  let playersPoints;
+  let dealersPoints;
+
   while (true) {
     shuffle(deck);
 
